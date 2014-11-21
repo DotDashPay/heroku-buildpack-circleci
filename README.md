@@ -9,5 +9,5 @@ that
 - retrieves the location of the
   [`ENV_DIR/CIRCLECI_ARTIFACT`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
   from the [CircleCI artifacts API](https://circleci.com/docs/api#build-artifacts)
-- retrieve the artifact from Circle
-- decompress it
+- retrieves the artifact from Circle
+- decompresses it
