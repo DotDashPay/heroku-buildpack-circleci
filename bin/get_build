@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+# bin/get_build commit file
+require 'json'
+commit = ARGV.shift
+file = ARGV.shift
+
+builds = JSON.parse(File.read(file))
+build = builds.find { |build| build['vcs_revision'] == commit }
+p build['build_num']

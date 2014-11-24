@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+# bin/get_build commit file
+require 'json'
+desired_artifact = ARGV.shift
+file = ARGV.shift
+artifacts = JSON.parse(File.read(file))
+artifact = artifacts.find { |artifact| /#{desired_artifact}/ === artifact['pretty_path'] }
+p artifact['url']
