@@ -18,6 +18,7 @@ echo `pwd`
 echo `ls -al $BUILD_DIR`
 echo `ls -al $ENV_DIR`
 echo $COMMIT
+echo `env`
 
 CIRCLECI_BASE_URL='https://circleci.com/api/v1/project'
 CIRCLECI_PROJECT_URL="$CIRCLECI_BASE_URL/$CIRCLECI_PROJECT"
