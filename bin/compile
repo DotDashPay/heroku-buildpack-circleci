@@ -25,22 +25,21 @@ CIRCLECI_ARTIFACTS_URL="$CIRCLECI_PROJECT_URL/$CIRCLECI_BUILD_NUM/artifacts?circ
 
 ARTIFACTS_OUTPUT='artifacts.json'
 
-echo $CIRCLECI_ARTIFACTS_URL
 
 curl --header $JSON_HEADER -o $ARTIFACTS_OUTPUT $CIRCLECI_ARTIFACTS_URL
 
 CIRCLECI_ARTIFACT_URL=`bin/get_artifact $CIRCLECI_ARTIFACT $ARTIFACTS_OUTPUT`
+CIRCLECI_ARTIFACT_URL=`echo $CIRCLECI_ARTIFACT_URL | sed -e 's/"//g'`
+CIRCLECI_ARTIFACT_URL="$CIRCLECI_ARTIFACT_URL?circle-token=$CIRCLECI_TOKEN"
 
-echo $CIRCLECI_ARTIFACT_URL
+echo `curl -ssl3 -o "$BUILD_DIR/$CIRCLECI_ARTIFACT" $CIRCLECI_ARTIFACT_URL 2>&1`
 
-curl -ssl3 -k -O $CIRCLECI_ARTIFACT_URL
-
-if [ -e $CIRCLECI_ARTIFACT ]
-  echo 'Did not get the artifact'
-  exit 1
+if [ -e "$BUILD_DIR/$CIRCLECI_ARTIFACT" ]
 then
-  echo 'Unzipping the artifact'
-  tar -xzf $CIRCLECI_ARTIFACT
+  echo "Unzipping the artifact"
+  tar -C $BUILD_DIR -xzf $BUILD_DIR/$CIRCLECI_ARTIFACT
+  exit
 fi
 
-exit
+echo "Did not get the artifact"
+exit 1
