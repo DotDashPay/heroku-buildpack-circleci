@@ -11,14 +11,15 @@ ENV_DIR=$3
 CIRCLECI_TOKEN=`cat $ENV_DIR/CIRCLECI_TOKEN`
 CIRCLECI_PROJECT=`cat $ENV_DIR/CIRCLECI_PROJECT`
 CIRCLECI_ARTIFACT=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
+CIRCLECI_BUILD_NUM=`cat $ENV_DIR/CIRCLECI_BUILD_NUM`
 JSON_HEADER='Accept:application/json'
-COMMIT=`git -C $BUILD_DIR log --pretty=oneline -1 | cut -d' ' -f1`
-
-echo `pwd`
-echo `ls -al $BUILD_DIR`
-echo `ls -al $ENV_DIR`
-echo $COMMIT
-echo `env`
+# COMMIT=`git -C $BUILD_DIR log --pretty=oneline -1 | cut -d' ' -f1`
+#
+# echo `pwd`
+# echo `ls -al $BUILD_DIR`
+# echo `ls -al $ENV_DIR`
+# echo $COMMIT
+# echo `env`
 
 CIRCLECI_BASE_URL='https://circleci.com/api/v1/project'
 CIRCLECI_PROJECT_URL="$CIRCLECI_BASE_URL/$CIRCLECI_PROJECT"
@@ -27,11 +28,11 @@ CIRCLECI_BUILDS_URL="$CIRCLECI_PROJECT_URL/tree/$BRANCH?circle-token=$CIRCLECI_T
 
 BUILDS_OUTPUT='builds.json'
 
-curl --header $JSON_HEADER -o $BUILDS_OUTPUT $CIRCLECI_BUILDS_URL
+# curl --header $JSON_HEADER -o $BUILDS_OUTPUT $CIRCLECI_BUILDS_URL
 
-CIRCLECI_BUILD_NUMBER=`bin/get_build $COMMIT $BUILDS_OUTPUT`
+# CIRCLECI_BUILD_NUMBER=`bin/get_build $COMMIT $BUILDS_OUTPUT`
 
-CIRCLECI_ARTIFACTS_URL="$CIRCLECI_PROJECT_URL/$CIRCLECI_BUILD_NUMBER/artifacts?circle-token=$CIRCLECI_TOKEN"
+CIRCLECI_ARTIFACTS_URL="$CIRCLECI_PROJECT_URL/$CIRCLECI_BUILD_NUM/artifacts?circle-token=$CIRCLECI_TOKEN"
 
 ARTIFACTS_OUTPUT='artifacts.json'
 
