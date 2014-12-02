@@ -34,7 +34,8 @@ CIRCLECI_ARTIFACT_URL=`bin/get_artifact $CIRCLECI_ARTIFACT $ARTIFACTS_OUTPUT`
 curl -ssl3 -O $CIRCLECI_ARTIFACT_URL
 
 if [ -e $CIRCLECI_ARTIFACT ]
-  exit 1 
+  echo "Didn't get the artifact"
+  exit 1
 then
   tar -xzf $CIRCLECI_ARTIFACT
 fi
