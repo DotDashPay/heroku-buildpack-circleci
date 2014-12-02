@@ -33,7 +33,7 @@ CIRCLECI_ARTIFACT_URL=`bin/get_artifact $CIRCLECI_ARTIFACT $ARTIFACTS_OUTPUT`
 
 echo $CIRCLECI_ARTIFACT_URL
 
-curl -kO $CIRCLECI_ARTIFACT_URL
+curl -ssl3 -k -O $CIRCLECI_ARTIFACT_URL
 
 if [ -e $CIRCLECI_ARTIFACT ]
   echo 'Did not get the artifact'
