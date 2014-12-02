@@ -14,6 +14,8 @@ CIRCLECI_ARTIFACT=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
 JSON_HEADER='Accept:application/json'
 COMMIT=`git log --pretty=oneline -1 | cut -d' ' -f1`
 
+echo `pwd`
+
 echo $COMMIT
 
 CIRCLECI_BASE_URL='https://circleci.com/api/v1/project'
