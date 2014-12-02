@@ -12,7 +12,7 @@ CIRCLECI_TOKEN=`cat $ENV_DIR/CIRCLECI_TOKEN`
 CIRCLECI_PROJECT=`cat $ENV_DIR/CIRCLECI_PROJECT`
 CIRCLECI_ARTIFACT=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
 JSON_HEADER='Accept:application/json'
-COMMIT=`git log --pretty=oneline -1 | cut -d' ' -f1`
+COMMIT=`git -C $BUILD_DIR log --pretty=oneline -1 | cut -d' ' -f1`
 
 echo `pwd`
 echo `ls $BUILD_DIR`
