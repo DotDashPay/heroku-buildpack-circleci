@@ -36,9 +36,10 @@ echo $CIRCLECI_ARTIFACT_URL
 curl -kO $CIRCLECI_ARTIFACT_URL
 
 if [ -e $CIRCLECI_ARTIFACT ]
-  echo "Didn't get the artifact"
+  echo 'Did not get the artifact'
   exit 1
 then
+  echo 'Unzipping the artifact'
   tar -xzf $CIRCLECI_ARTIFACT
 fi
 
