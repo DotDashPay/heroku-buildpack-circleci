@@ -15,7 +15,7 @@ JSON_HEADER='Accept:application/json'
 COMMIT=`git -C $BUILD_DIR log --pretty=oneline -1 | cut -d' ' -f1`
 
 echo `pwd`
-echo `ls $BUILD_DIR`
+echo `ls -al $BUILD_DIR`
 echo $COMMIT
 
 CIRCLECI_BASE_URL='https://circleci.com/api/v1/project'
