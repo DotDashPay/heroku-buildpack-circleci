@@ -13,10 +13,11 @@ end
 
 desired_artifact = ARGV.shift
 url = ARGV.shift
-get_artifact(JSON.parse(artifact_file(url)), desired_artifact)
+
+artifact = get_artifact(JSON.parse(artifact_file(url)), desired_artifact)
 # If we didn't get the artifact, sleep for 5 seconds and try again
 if artifact.nil?
   sleep 5
-  get_artifact(JSON.parse(artifact_file(url)), desired_artifact)
+  artifact = get_artifact(JSON.parse(artifact_file(url)), desired_artifact)
 end
 p artifact['url'] unless artifact.nil?
