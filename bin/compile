@@ -38,8 +38,9 @@ echo `curl -k -o "$CIRCLECI_ARTIFACT" $CIRCLECI_ARTIFACT_URL 2>&1`
 
 if [ -e "$CIRCLECI_ARTIFACT" ]
 then
-  echo "Unzipping the artifact"
+  echo "Unzipping the artifact into $BUILD_DIR"
   tar -C $BUILD_DIR -xzf $CIRCLECI_ARTIFACT
+  echo `ls $BUILD_DIR`
   rm $CIRCLECI_ARTIFACT
   exit
 fi
