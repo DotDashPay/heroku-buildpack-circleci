@@ -5,4 +5,4 @@ desired_artifact = ARGV.shift
 file = ARGV.shift
 artifacts = JSON.parse(File.open(file, "r:utf-8").read)
 artifact = artifacts.find { |artifact| /#{desired_artifact}/ === artifact['pretty_path'] }
-p artifact['url']
+p artifact['url'] unless artifact.nil?
