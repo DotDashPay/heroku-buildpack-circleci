@@ -8,29 +8,33 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-CIRCLECI_TOKEN=`cat $ENV_DIR/CIRCLECI_TOKEN`
-CIRCLECI_PROJECT=`cat $ENV_DIR/CIRCLECI_PROJECT`
-CIRCLECI_ARTIFACT=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
-CIRCLECI_BUILD_NUM=`cat $ENV_DIR/CIRCLECI_BUILD_NUM`
-JSON_HEADER='Accept:application/json'
+ARTIFACT=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
+BUILD_NUMBER=`cat $ENV_DIR/CIRCLECI_BUILD_NUM`
+BUCKET='imperative-builds'
+AWS_ACCESS_KEY=`cat $ENV_DIR/AWS_ACCESS_KEY_ID`
+AWS_SECRET_KEY=`cat $ENV_DIR/AWS_SECRET_ACCESS_KEY`
 
-CIRCLECI_BASE_URL='https://circleci.com/api/v1/project'
-CIRCLECI_PROJECT_URL="$CIRCLECI_BASE_URL/$CIRCLECI_PROJECT"
-
-if [ ! -e "$CIRCLECI_ARTIFACT" ]; then
-  CIRCLECI_ARTIFACTS_URL="$CIRCLECI_PROJECT_URL/$CIRCLECI_BUILD_NUM/artifacts?circle-token=$CIRCLECI_TOKEN"
-  CIRCLECI_ARTIFACT_URL=`bin/get_artifact $CIRCLECI_ARTIFACT $CIRCLECI_ARTIFACTS_URL`
-  CIRCLECI_ARTIFACT_URL=`echo $CIRCLECI_ARTIFACT_URL | sed -e 's/"//g'`
-  CIRCLECI_ARTIFACT_URL="$CIRCLECI_ARTIFACT_URL?circle-token=$CIRCLECI_TOKEN"
-  echo $CIRCLECI_ARTIFACT_URL
-  echo `curl -k -o "$CIRCLECI_ARTIFACT" $CIRCLECI_ARTIFACT_URL 2>&1`
+if [ ! -e "$ARTIFACT" ]; then
+  RESOURCE="${BUILD_NUMBER}-${ARTIFACT}"
+  CONTENT_TYPE="application/x-compressed-tar"
+  DATE_VALUE=`date "+%a, %d %b %Y %T %Z"`
+  VERB="GET"
+  STRING_TO_SIGN="${VERB}\n\n${CONTENT_TYPE}\n${DATE_VALUE}\n/${BUCKET}/${RESOURCE}"
+  echo -en $STRING_TO_SIGN
+  SIGNATURE=`echo -en "${STRING_TO_SIGN}" | openssl sha1 -hmac "${AWS_SECRET_KEY}" -binary | base64`
+  echo $SIGNATURE
+  curl -X $VERB \
+  -H "Host: ${BUCKET}.s3.amazonaws.com" \
+  -H "Date: ${DATE_VALUE}" \
+  -H "Content-Type: ${CONTENT_TYPE}" \
+  -H "Authorization: AWS ${AWS_ACCESS_KEY}:${SIGNATURE}" \
+  https://${BUCKET}.s3.amazonaws.com/${RESOURCE} > $ARTIFACT
 fi
 
-if [ -e "$CIRCLECI_ARTIFACT" ]; then
+if [ -e "$ARTIFACT" ]; then
   echo "Unzipping the artifact into $BUILD_DIR"
-  tar -C $BUILD_DIR -xzf $CIRCLECI_ARTIFACT
-  echo `ls $BUILD_DIR`
-  rm $CIRCLECI_ARTIFACT
+  tar -C $BUILD_DIR -xzf $ARTIFACT
+  rm $ARTIFACT
   exit
 fi
 
