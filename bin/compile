@@ -9,7 +9,7 @@ CACHE_DIR=$2
 ENV_DIR=$3
 
 # in the form of "/home/ubuntu/path/to/gzip"
-ARTIFACT_=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
+ARTIFACT=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
 # the build number you wish to deploy
 BUILD_NUMBER=`cat $ENV_DIR/CIRCLECI_BUILD_NUM`
 # the build number you wish to deploy
@@ -19,7 +19,6 @@ CIRCLE_TOKEN=`cat $ENV_DIR/CIRCLECI_TOKEN`
 CIRCLE_REPO_NUM=`cat $ENV_DIR/CIRCLECI_REPO_NUM`
 
 LOCAL_ARTIFACT="circleci_artifact.tar.gz"
-LOCAL_BIN="main-${DATE}"
 
 wget "https://${BUILD_NUMBER}-${CIRCLE_REPO_NUM}-gh.circle-artifacts.com/0${ARTIFACT}?circle-token=${CIRCLE_TOKEN}" -O $LOCAL_ARTIFACT
 
