@@ -21,15 +21,17 @@ CIRCLE_REPO_NUM=`cat $ENV_DIR/CIRCLECI_REPO_NUM`
 DATE=`date +%Y-%m-%d`
 
 LOCAL_ARTIFACT="circleci_artifact.tar.gz"
-LOCAL_BIN="${BUILD_DIR}/main-${DATE}"
+LOCAL_BIN="main-${DATE}"
 
 wget "https://${BUILD_NUMBER}-${CIRCLE_REPO_NUM}-gh.circle-artifacts.com/0${ARTIFACT}?circle-token=${CIRCLE_TOKEN}" -O $LOCAL_ARTIFACT
 
 if [ -e "$LOCAL_ARTIFACT" ]; then
   echo "Unzipping the artifact into $BUILD_DIR"
-  tar -C $LOCAL_BIN $LOCAL_ARTIFACT
-  chmod +x $LOCAL_BIN
+  mkdir temp 
+  tar xf $LOCAL_ARTIFACT -C temp
+  mv temp/${LOCAL_BIN} ${BUILD_DIR}
   rm $LOCAL_ARTIFACT
+  rm -rf temp
   exit 0
 fi
 
