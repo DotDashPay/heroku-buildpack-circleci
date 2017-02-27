@@ -25,6 +25,7 @@ wget "https://${BUILD_NUMBER}-${CIRCLE_REPO_NUM}-gh.circle-artifacts.com/0${ARTI
 if [ -e "$LOCAL_ARTIFACT" ]; then
   echo "Unzipping the artifact into $BUILD_DIR"
   tar -C $BUILD_DIR -xzf $LOCAL_ARTIFACT
+  chmod +x $LOCAL_ARTIFACT
   rm $LOCAL_ARTIFACT
   exit 0
 fi
