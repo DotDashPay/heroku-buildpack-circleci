@@ -8,34 +8,25 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
+# in the form of "/home/ubuntu/path/to/gzip"
 ARTIFACT=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
+# the build number you wish to deploy
 BUILD_NUMBER=`cat $ENV_DIR/CIRCLECI_BUILD_NUM`
-BUCKET='imperative-builds'
-AWS_ACCESS_KEY=`cat $ENV_DIR/AWS_ACCESS_KEY_ID`
-AWS_SECRET_KEY=`cat $ENV_DIR/AWS_SECRET_ACCESS_KEY`
+# the build number you wish to deploy
+CIRCLE_TOKEN=`cat $ENV_DIR/CIRCLECI_TOKEN`
+# the circleci number for the repo. can be found in subdomain of the artifact url.
+# (ie https://<build-num>-<repo-num>.gh.circle-artifacts.com)
+CIRCLE_REPO_NUM=`cat $ENV_DIR/CIRCLECI_REPO_NUM`
 
-if [ ! -e "$ARTIFACT" ]; then
-  RESOURCE="${BUILD_NUMBER}-${ARTIFACT}"
-  CONTENT_TYPE="application/x-compressed-tar"
-  DATE_VALUE=`date "+%a, %d %b %Y %T %Z"`
-  VERB="GET"
-  STRING_TO_SIGN="${VERB}\n\n${CONTENT_TYPE}\n${DATE_VALUE}\n/${BUCKET}/${RESOURCE}"
-  echo -en $STRING_TO_SIGN
-  SIGNATURE=`echo -en "${STRING_TO_SIGN}" | openssl sha1 -hmac "${AWS_SECRET_KEY}" -binary | base64`
-  echo $SIGNATURE
-  curl -X $VERB \
-  -H "Host: ${BUCKET}.s3.amazonaws.com" \
-  -H "Date: ${DATE_VALUE}" \
-  -H "Content-Type: ${CONTENT_TYPE}" \
-  -H "Authorization: AWS ${AWS_ACCESS_KEY}:${SIGNATURE}" \
-  https://${BUCKET}.s3.amazonaws.com/${RESOURCE} > $ARTIFACT
-fi
+LOCAL_ARTIFACT="circleci_artifact.tar.gz"
 
-if [ -e "$ARTIFACT" ]; then
+wget "https://${BUILD_NUMBER}-${CIRCLE_REPO_NUM}-gh.circle-artifacts.com/0${ARTIFACT}?circle-token=${CIRCLE_TOKEN}" -O $LOCAL_ARTIFACT
+
+if [ -e "$LOCAL_ARTIFACT" ]; then
   echo "Unzipping the artifact into $BUILD_DIR"
-  tar -C $BUILD_DIR -xzf $ARTIFACT
-  rm $ARTIFACT
-  exit
+  tar -C $BUILD_DIR -xzf $LOCAL_ARTIFACT
+  rm $LOCAL_ARTIFACT
+  exit 0
 fi
 
 echo "Did not get the artifact"
