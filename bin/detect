@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 # bin/detect <build-dir>
 
+set -e
 BUILD_DIR=$1
+echo "CircleCI-built binary"
+exit 0
