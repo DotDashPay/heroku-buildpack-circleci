@@ -9,6 +9,7 @@ that
   [`CIRCLECI_BUILD_NUM`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
   - retrieves the location of the
   [`CIRCLECI_ARTIFACT`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
+  - retrieves the CircleCI repo number from `CIRCLECI_REPO_NUM`
   from the [CircleCI artifacts API](https://circleci.com/docs/api#build-artifacts)
 - retrieves the artifact from Circle
 - decompresses it
