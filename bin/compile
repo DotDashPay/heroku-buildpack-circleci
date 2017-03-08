@@ -18,8 +18,15 @@ CIRCLE_TOKEN=`cat $ENV_DIR/CIRCLECI_TOKEN`
 CIRCLE_REPO_NUM=`cat $ENV_DIR/CIRCLECI_REPO_NUM`
 # what we save the tar as, on the host
 LOCAL_ARTIFACT="circleci_artifact.tar.gz"
+# if we want a non-circleci url
+CUSTOM_ARTIFACT_URL=`cat $ENV_DIR/CUSTOM_ARTIFACT_URL`
 
-wget "https://${BUILD_NUMBER}-${CIRCLE_REPO_NUM}-gh.circle-artifacts.com/0${ARTIFACT}?circle-token=${CIRCLE_TOKEN}" -O $LOCAL_ARTIFACT
+if [ -n "$CUSTOM_ARTIFACT_URL" ]; then
+    wget "$CUSTOM_ARTIFACT_URL" -O $LOCAL_ARTIFACT
+else
+    wget "https://${BUILD_NUMBER}-${CIRCLE_REPO_NUM}-gh.circle-artifacts.com/0${ARTIFACT}?circle-token=${CIRCLE_TOKEN}" -O $LOCAL_ARTIFACT
+fi
+
 
 if [ -e "$LOCAL_ARTIFACT" ]; then
   echo "Unzipping the artifact into $BUILD_DIR/bin"
