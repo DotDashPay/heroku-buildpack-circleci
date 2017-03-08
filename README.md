@@ -1,7 +1,7 @@
 # Heroku Buildpack: CircleCI
 This is a [Heroku buildpack](https://devcenter.heroku.com/articles/buildpacks)
 that
-- retrieves the CircleCI token from
+  - retrieves the CircleCI token from
   [`CIRCLECI_TOKEN`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
   - retrieves the CircleCI project from
   [`CIRCLECI_PROJECT`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
@@ -11,5 +11,6 @@ that
   [`CIRCLECI_ARTIFACT`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
   - retrieves the CircleCI repo number from `CIRCLECI_REPO_NUM`
   from the [CircleCI artifacts API](https://circleci.com/docs/api#build-artifacts)
+  - You can alternatively set a `CUSTOM_ARTIFACT_URL` to fetch the artifact from a url (eg, an amazon s3 link)
 - retrieves the artifact from Circle
 - decompresses it
