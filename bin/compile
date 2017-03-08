@@ -19,7 +19,10 @@ CIRCLE_REPO_NUM=`cat $ENV_DIR/CIRCLECI_REPO_NUM`
 # what we save the tar as, on the host
 LOCAL_ARTIFACT="circleci_artifact.tar.gz"
 # if we want a non-circleci url
-CUSTOM_ARTIFACT_URL=`cat $ENV_DIR/CUSTOM_ARTIFACT_URL`
+CUSTOM_ARTIFACT_URL=""
+if [ -f "$ENV_DIR/CUSTOM_ARTIFACT_URL" ]; then
+   CUSTOM_ARTIFACT_URL=`cat $ENV_DIR/CUSTOM_ARTIFACT_URL`
+fi
 
 if [ -n "$CUSTOM_ARTIFACT_URL" ]; then
     wget "$CUSTOM_ARTIFACT_URL" -O $LOCAL_ARTIFACT
