@@ -7,15 +7,6 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-# in the form of "/home/ubuntu/path/to/gzip"
-ARTIFACT=`cat $ENV_DIR/CIRCLECI_ARTIFACT`
-# the build number you wish to deploy
-BUILD_NUMBER=`cat $ENV_DIR/CIRCLECI_BUILD_NUM`
-# the build number you wish to deploy
-CIRCLE_TOKEN=`cat $ENV_DIR/CIRCLECI_TOKEN`
-# the circleci number for the repo. can be found in subdomain of the artifact url.
-# (ie https://<build-num>-<repo-num>.gh.circle-artifacts.com)
-CIRCLE_REPO_NUM=`cat $ENV_DIR/CIRCLECI_REPO_NUM`
 # what we save the tar as, on the host
 LOCAL_ARTIFACT="circleci_artifact.tar.gz"
 # if we want a non-circleci url
@@ -24,10 +15,26 @@ if [ -f "$ENV_DIR/CUSTOM_ARTIFACT_URL" ]; then
    CUSTOM_ARTIFACT_URL=`cat $ENV_DIR/CUSTOM_ARTIFACT_URL`
 fi
 
+# file name, eg. event.processor.tar.gz
+ARTIFACT=`cat $ENV_DIR/ARTIFACT`
+# build id, eg 1.0-2017.03.27-82178560e00eaa688807cd5f04faef472d0f2db9-1234
+BUILD_ID=`cat $ENV_DIR/BUILD_ID`
+
 if [ -n "$CUSTOM_ARTIFACT_URL" ]; then
     wget "$CUSTOM_ARTIFACT_URL" -O $LOCAL_ARTIFACT
 else
-    wget "https://${BUILD_NUMBER}-${CIRCLE_REPO_NUM}-gh.circle-artifacts.com/0${ARTIFACT}?circle-token=${CIRCLE_TOKEN}" -O $LOCAL_ARTIFACT
+    # grab the artifact from s3
+    AMZ_FILE="$BUILD_ID/$ARTIFACT"
+    BUCKET="ddp-build"
+    AWS_KEY=`cat $ENV_DIR/AWS_ACCESS_KEY_ID`
+    AWS_SECRET=`cat $ENV_DIR/AWS_SECRET_ACCESS_KEY`
+    mkdir ~/.aws
+    cat > ~/.aws/credentials <<EOF
+[default]
+aws_access_key_id = ${AWS_KEY}
+aws_secret_access_key = ${AWS_SECRET}
+EOF
+    aws s3 cp "s3://$BUCKET/$AMZ_FILE" $LOCAL_ARTIFACT
 fi
 
 
