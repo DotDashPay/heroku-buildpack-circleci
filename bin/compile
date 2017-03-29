@@ -26,14 +26,9 @@ else
     # grab the artifact from s3
     AMZ_FILE="$BUILD_ID/$ARTIFACT"
     BUCKET="ddp-build"
-    AWS_KEY=`cat $ENV_DIR/AWS_ACCESS_KEY_ID`
-    AWS_SECRET=`cat $ENV_DIR/AWS_SECRET_ACCESS_KEY`
-    mkdir ~/.aws
-    cat > ~/.aws/credentials <<EOF
-[default]
-aws_access_key_id = ${AWS_KEY}
-aws_secret_access_key = ${AWS_SECRET}
-EOF
+    export AWS_ACCESS_KEY_ID=`cat $ENV_DIR/AWS_ACCESS_KEY_ID`
+    export AWS_SECRET_ACCESS_KEY=`cat $ENV_DIR/AWS_SECRET_ACCESS_KEY`
+    export AWS_DEFAULT_REGION="us-west-2"
     aws s3 cp "s3://$BUCKET/$AMZ_FILE" $LOCAL_ARTIFACT
 fi
 
