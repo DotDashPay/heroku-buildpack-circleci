@@ -24,12 +24,13 @@ if [ -n "$CUSTOM_ARTIFACT_URL" ]; then
     wget "$CUSTOM_ARTIFACT_URL" -O $LOCAL_ARTIFACT
 else
     # grab the artifact from s3
+    echo "getting binary from s3"
     AMZ_FILE="$BUILD_ID/$ARTIFACT"
     BUCKET="ddp-build"
-    export AWS_ACCESS_KEY_ID=`cat $ENV_DIR/AWS_ROOT_ARENA_ACCESS_KEY_ID`
-    export AWS_SECRET_ACCESS_KEY=`cat $ENV_DIR/AWS_ROOT_ARENA_SECRET_ACCESS_KEY`
-    export AWS_DEFAULT_REGION="us-west-2"
-    aws s3 cp "s3://$BUCKET/$AMZ_FILE" $LOCAL_ARTIFACT
+    AWS_ACCESS_KEY_ID=`cat $ENV_DIR/AWS_ROOT_ARENA_ACCESS_KEY_ID` \
+    AWS_SECRET_ACCESS_KEY=`cat $ENV_DIR/AWS_ROOT_ARENA_SECRET_ACCESS_KEY` \
+    AWS_DEFAULT_REGION="us-west-2" \
+        aws s3 cp "s3://$BUCKET/$AMZ_FILE" $LOCAL_ARTIFACT
 fi
 
 
@@ -38,6 +39,7 @@ if [ -e "$LOCAL_ARTIFACT" ]; then
   mkdir ${BUILD_DIR}/bin
   tar xf $LOCAL_ARTIFACT -C ${BUILD_DIR}/bin
   rm $LOCAL_ARTIFACT
+  echo "Done getting artifacts!"
   exit 0
 fi
 
