@@ -1,16 +1,13 @@
-# Heroku Buildpack: CircleCI
+# Heroku Buildpack: S3 downloader
+
+TODO(avi): - the entire repo needs to be renamed
+
 This is a [Heroku buildpack](https://devcenter.heroku.com/articles/buildpacks)
 that
-  - retrieves the CircleCI token from
-  [`CIRCLECI_TOKEN`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
-  - retrieves the CircleCI project from
-  [`CIRCLECI_PROJECT`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
-  - retrieves the CircleCI build number from
-  [`CIRCLECI_BUILD_NUM`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
-  - retrieves the location of the
-  [`CIRCLECI_ARTIFACT`](https://devcenter.heroku.com/articles/buildpack-api#bin-compile)
-  - retrieves the CircleCI repo number from `CIRCLECI_REPO_NUM`
-  from the [CircleCI artifacts API](https://circleci.com/docs/api#build-artifacts)
-  - You can alternatively set a `CUSTOM_ARTIFACT_URL` to fetch the artifact from a url (eg, an amazon s3 link)
-- retrieves the artifact from Circle
-- decompresses it
+  - Grabs your artifact based on the `ARTIFACT` environment variable from s3
+  given a `BUILD_ID`.
+  - Uses amazon credentials `AWS_ROOT_ARENA_ACCESS_KEY_ID` and 
+  `AWS_ROOT_ARENA_SECRET_ACCESS_KEY`
+  - (currently unused) You can alternatively set a `CUSTOM_ARTIFACT_URL` to fetch the artifact from a custom URL (no auth)
+  - Once the artifact is downloaded, it is decompressed into a top-level `bin`
+  directory in odin
